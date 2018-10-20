@@ -58,6 +58,7 @@ if __name__ == '__main__':
     save_as_json(list(tags), 'output/tag.json')
 
     user_rank = []
+    user_miss = []
     users = []
     with open('raw/checkins_missing.txt', 'r') as f:
         for line in f:
@@ -73,10 +74,14 @@ if __name__ == '__main__':
 
             for i in range(1, len(series), 2):
                 if series[i] == '?':
+                    if len(user_miss) == 0 or user_miss[-1] != user:
+                        user_miss.append(user)
                     continue
 
                 user_rank[-1][user_locs.index(series[i])] += 1
 
+    save_as_json(user_miss, 'output/user.miss.json')
+    save_as_json(users, 'output/user.json')
+
     user_rank = sparse.csr_matrix(user_rank)
     sparse.save_npz('output/user.rank.npz', user_rank)
-    save_as_json(users, 'output/user.json')
