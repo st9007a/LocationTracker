@@ -21,7 +21,8 @@ if __name__ == '__main__':
             struct_seq = []
 
             for i in range(0, len(series), 2):
-                struct_seq.append((int(series[i]), series[i + 1]))
+                loc_id = series[i + 1] if series[i + 1] != '?' else user + '-?'
+                struct_seq.append((int(series[i]), loc_id))
 
             user_checkin[user].append(struct_seq)
 
