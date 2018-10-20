@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import os
-import pickle
-import json
+
+from utils.io import save_pkl
 
 if __name__ == '__main__':
 
@@ -30,8 +30,7 @@ if __name__ == '__main__':
                 tags_us.add(data[3])
                 count_us += 1
 
-    with open('output/db.pkl', 'wb') as p:
-        pickle.dump(db, p, protocol=pickle.HIGHEST_PROTOCOL)
+    save_pkl(db, 'output/db.pkl')
 
     # with open('output/tags.pkl', 'wb') as p:
     #     pickle.dump(tags_us, p, protocol=pickle.HIGHEST_PROTOCOL)

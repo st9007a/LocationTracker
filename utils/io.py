@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import math
 import json
+import pickle
 
 def distance(lat1, lon1, lat2, lon2):
 
@@ -12,13 +13,23 @@ def distance(lat1, lon1, lat2, lon2):
 
     return c * 6371e3
 
-def save_as_json(obj, file):
+def save_json(obj, file):
     with open(file, 'w') as j:
         json.dump(obj, j, indent=4)
 
 def read_json(file):
     with open(file, 'r') as j:
         obj = json.load(j)
+
+    return obj
+
+def save_pkl(obj, file):
+    with open(file, 'wb') as p:
+        pickle.dump(obj, p, protocol=pickle.HIGHEST_PROTOCOL)
+
+def read_pkl(file):
+    with open(file, 'rb') as p:
+        obj = pickle.load(p)
 
     return obj
 

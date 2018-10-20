@@ -5,12 +5,9 @@ import pickle
 import numpy as np
 from scipy import sparse
 
-with open('output/db.pkl', 'rb') as p:
-    db = pickle.load(p)
+from utils.io import save_json, read_pkl
 
-def save_as_json(obj, file):
-    with open(file, 'w') as j:
-        json.dump(obj, j, indent=4)
+db = read_pkl('output/db.pkl')
 
 def check_series(series):
     for i in range(1, len(series), 2):
@@ -29,7 +26,7 @@ if __name__ == '__main__':
         locs = f.readlines()
         locs = [loc.rstrip('\n') for loc in locs]
 
-    save_as_json(locs, 'output/candidate.json')
+    save_json(locs, 'output/candidate.json')
 
     user_locs = set()
     with open('raw/checkins_missing.txt', 'r') as f:
@@ -49,7 +46,7 @@ if __name__ == '__main__':
     user_locs.update(locs)
     user_locs = list(user_locs)
 
-    save_as_json(user_locs, 'output/user.loc.json')
+    save_json(user_locs, 'output/user.loc.json')
 
     tags = set()
     for lid in user_locs:
@@ -80,8 +77,8 @@ if __name__ == '__main__':
 
                 user_rank[-1][user_locs.index(series[i])] += 1
 
-    save_as_json(user_miss, 'output/user.miss.json')
-    save_as_json(users, 'output/user.json')
+    save_json(user_miss, 'output/user.miss.json')
+    save_json(users, 'output/user.json')
 
     user_rank = sparse.csr_matrix(user_rank)
     sparse.save_npz('output/user.rank.npz', user_rank)
