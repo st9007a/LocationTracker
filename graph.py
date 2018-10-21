@@ -39,7 +39,7 @@ def build_graph_matrix(nodes, user_group):
 
     graph_matrix += np.identity(len(nodes))
 
-    return sparse.csr_matrix(normalize_matrix(graph_matrix))
+    return sparse.csr_matrix(normalize_matrix(graph_matrix), dtype=np.float32)
 
 
 def build_node_features(nodes, user_gropu):
@@ -49,7 +49,7 @@ def build_node_features(nodes, user_gropu):
         series = user_checkin[user]
 
         for day_series in series:
-            day_series_clean = [el for el in day_series if el[1] not in loc_db or loc_db[el[1]] == 'US']
+            day_series_clean = [el for el in day_series if el[1] not in loc_db or loc_db[el[1]]['country'] == 'US']
 
             for ts in day_series_clean:
                 node_features[nodes.index(ts[1])][ts[0]] += 1
