@@ -13,7 +13,7 @@ def distance(lat1, lon1, lat2, lon2):
 
     return c * 6371e3
 
-def save_json(obj, file):
+def save_json(file, obj):
     with open(file, 'w') as j:
         json.dump(obj, j, indent=4)
 
@@ -23,7 +23,7 @@ def read_json(file):
 
     return obj
 
-def save_pkl(obj, file):
+def save_pkl(file, obj):
     with open(file, 'wb') as p:
         pickle.dump(obj, p, protocol=pickle.HIGHEST_PROTOCOL)
 

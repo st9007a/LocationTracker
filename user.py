@@ -26,7 +26,7 @@ if __name__ == '__main__':
         locs = f.readlines()
         locs = [loc.rstrip('\n') for loc in locs]
 
-    save_json(locs, 'output/candidate.json')
+    save_json('output/candidate.json', locs)
 
     user_locs = set()
     with open('raw/checkins_missing.txt', 'r') as f:
@@ -46,13 +46,13 @@ if __name__ == '__main__':
     user_locs.update(locs)
     user_locs = list(user_locs)
 
-    save_json(user_locs, 'output/user.loc.json')
+    save_json('output/user.loc.json', user_locs)
 
     tags = set()
     for lid in user_locs:
         tags.add(db[lid]['tag'])
 
-    save_as_json(list(tags), 'output/tag.json')
+    save_json('output/tag.json', list(tags))
 
     user_rank = []
     user_miss = []
@@ -77,8 +77,8 @@ if __name__ == '__main__':
 
                 user_rank[-1][user_locs.index(series[i])] += 1
 
-    save_json(user_miss, 'output/user.miss.json')
-    save_json(users, 'output/user.json')
+    save_json('output/user.miss.json', user_miss)
+    save_json('output/user.json', users)
 
     user_rank = sparse.csr_matrix(user_rank)
     sparse.save_npz('output/user.rank.npz', user_rank)

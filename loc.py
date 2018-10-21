@@ -30,7 +30,7 @@ if __name__ == '__main__':
                 tags_us.add(data[3])
                 count_us += 1
 
-    save_pkl(db, 'output/db.pkl')
+    save_pkl('output/db.pkl', db)
 
     # with open('output/tags.pkl', 'wb') as p:
     #     pickle.dump(tags_us, p, protocol=pickle.HIGHEST_PROTOCOL)
