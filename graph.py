@@ -16,10 +16,10 @@ loc_db = read_pkl('output/db.pkl')
 
 def normalize_matrix(adj):
     rowsum = np.sum(adj, axis=1)
-    d = np.power(rowsum, -0.5)
+    d = np.power(rowsum, -1)
     d = np.diag(d)
 
-    return np.matmul(np.matmul(d, adj), d)
+    return np.matmul(d, adj)
 
 def build_graph_matrix(nodes, user_group):
     graph_matrix = np.zeros((len(nodes), len(nodes)))
@@ -30,17 +30,22 @@ def build_graph_matrix(nodes, user_group):
         for day_series in series:
             day_series_clean = [el for el in day_series if el[1] not in loc_db or loc_db[el[1]]['country'] == 'US']
 
-            for i in range(len(day_series_clean) - 1):
+            for i in range(len(day_series_clean)):
                 x = nodes.index(day_series_clean[i][1])
-                y = nodes.index(day_series_clean[i + 1][1])
+                y = nodes.index(day_series_clean[(i + 1) % len(day_series_clean)][1])
 
-                graph_matrix[x][y] = 1
-                graph_matrix[y][x] = 1
+                time = day_series_clean[(i + 1) % len(day_series_clean)][0] - day_series_clean[i][0]
+                if time < 0:
+                    time += 24
+
+                graph_matrix[x][y] += (24 - time) / 24
+
+                if x != y:
+                    graph_matrix[y][x] += 0.1 * (24 - time) / 24
 
     graph_matrix += np.identity(len(nodes))
 
     return sparse.csr_matrix(normalize_matrix(graph_matrix), dtype=np.float32)
-
 
 def build_node_features(nodes, user_gropu):
     node_features = np.zeros((len(nodes), 24))
