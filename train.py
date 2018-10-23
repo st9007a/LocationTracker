@@ -21,10 +21,11 @@ if __name__ == '__main__':
     node_labels = np.load('features/labels.npy')
     adj_matrix = sparse.load_npz('features/graph.npz')
 
-    train_mask, validation_mask = get_mask(node_features.shape[0], 0.2, test_mask)
+    train_mask, validation_mask = get_mask(total_size=node_features.shape[0], validation_ratio=0.2, exclude_idx=test_mask)
 
     model = GraphSequentialModel()
     model.add(GraphConvoluation(adj_matrix=adj_matrix, units=128, activation=tf.nn.relu, input_shape=(24,)))
+    model.add(GraphConvoluation(adj_matrix=adj_matrix, units=128, activation=tf.nn.relu))
     model.add(GraphConvoluation(adj_matrix=adj_matrix, units=128, activation=tf.nn.relu))
     model.add(GraphConvoluation(adj_matrix=adj_matrix, units=node_labels.shape[1]))
 
@@ -32,4 +33,4 @@ if __name__ == '__main__':
 
     model.compile(loss=tf.nn.softmax_cross_entropy_with_logits_v2,
                   train_mask=train_mask, validation_mask=validation_mask, optimizer=optimizer)
-    model.fit(node_features, node_labels, epochs=500000)
+    model.fit(node_features, node_labels, epochs=350000)
