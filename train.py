@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from utils.tfpkg.layers import Dropout, GraphConvoluation
 from utils.tfpkg.models import GraphSequentialModel
 from utils.tfpkg.optimizers import Optimizer
-from utils.io import read_pkl
+from utils.io import read_pkl, save_pkl
 
 def get_mask(total_size, validation_ratio, exclude_idx):
     mask = [i for i in range(total_size) if i not in exclude_idx]
@@ -22,6 +22,8 @@ if __name__ == '__main__':
     adj_matrix = sparse.load_npz('features/graph.npz')
 
     train_mask, validation_mask = get_mask(total_size=node_features.shape[0], validation_ratio=0.2, exclude_idx=test_mask)
+    save_pkl('features/train.mask.pkl', train_mask)
+    save_pkl('features/validation.mask.pkl', validation_mask)
 
     model = GraphSequentialModel()
     model.add(GraphConvoluation(adj_matrix=adj_matrix, units=128, activation=tf.nn.relu, input_shape=(24,)))
@@ -33,4 +35,4 @@ if __name__ == '__main__':
 
     model.compile(loss=tf.nn.softmax_cross_entropy_with_logits_v2,
                   train_mask=train_mask, validation_mask=validation_mask, optimizer=optimizer)
-    model.fit(node_features, node_labels, epochs=1000, save_path='models/test')
+    model.fit(node_features, node_labels, epochs=500000, save_path='models/test')

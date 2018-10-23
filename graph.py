@@ -41,7 +41,7 @@ def build_graph_matrix(nodes, user_group):
                 graph_matrix[x][y] += (24 - time) / 24
 
                 if x != y:
-                    graph_matrix[y][x] += 0.25 * (24 - time) / 24
+                    graph_matrix[y][x] += 0.1 * (24 - time) / 24
 
     graph_matrix += np.identity(len(nodes))
 
