@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import tensorflow as tf
 
+from .backend import learning_phase
+
 class Layer():
 
     _count = {}
@@ -34,13 +36,13 @@ class Layer():
         """Build tensorflow operation."""
         raise NotImplementedError
 
-    def get_output_shape(self):
+    def compute_output_shape(self):
         """Return output shape."""
         raise NotImplementedError
 
-    def get_feed_dict(self, training):
-        """Return feed dict"""
-        raise NotImplementedError
+    def __call__(self, x):
+        self.build()
+        return self.call(x)
 
 class Dropout(Layer):
 
@@ -50,23 +52,13 @@ class Dropout(Layer):
         super().__init__()
 
     def build(self):
-        with tf.name_scope(self.name):
-            self.keep_prob = tf.placeholder(tf.float32, name='keep_prob')
+        pass
 
     def call(self, x):
-        with tf.name_scope(self.name):
-            out = tf.nn.dropout(x, self.keep_prob)
+        return tf.layers.dropout(x, rate=self.rate, training=learning_phase(), name=self.name)
 
-        return out
-
-    def get_output_shape(self):
+    def compute_output_shape(self):
         return self.input_shape
-
-    def get_feed_dict(self, training):
-        if training:
-            return {self.keep_prob: 1 - self.rate}
-        else:
-            return {self.keep_prob: 1}
 
 class GraphConvoluation(Layer):
 
@@ -112,8 +104,5 @@ class GraphConvoluation(Layer):
 
         return out
 
-    def get_output_shape(self):
+    def compute_output_shape(self):
         return (self.units,)
-
-    def get_feed_dict(self, training):
-        return {}

@@ -30,7 +30,7 @@ def build_graph_matrix(nodes, user_group):
         for day_series in series:
             day_series_clean = [el for el in day_series if el[1] not in loc_db or loc_db[el[1]]['country'] == 'US']
 
-            for i in range(len(day_series_clean)):
+            for i in range(len(day_series_clean) - 1):
                 x = nodes.index(day_series_clean[i][1])
                 y = nodes.index(day_series_clean[(i + 1) % len(day_series_clean)][1])
 
@@ -41,7 +41,7 @@ def build_graph_matrix(nodes, user_group):
                 graph_matrix[x][y] += (24 - time) / 24
 
                 if x != y:
-                    graph_matrix[y][x] += 0.1 * (24 - time) / 24
+                    graph_matrix[y][x] += 0.25 * (24 - time) / 24
 
     graph_matrix += np.identity(len(nodes))
 

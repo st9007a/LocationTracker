@@ -33,4 +33,4 @@ if __name__ == '__main__':
 
     model.compile(loss=tf.nn.softmax_cross_entropy_with_logits_v2,
                   train_mask=train_mask, validation_mask=validation_mask, optimizer=optimizer)
-    model.fit(node_features, node_labels, epochs=350000)
+    model.fit(node_features, node_labels, epochs=1000, save_path='models/test')
