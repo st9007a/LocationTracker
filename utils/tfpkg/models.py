@@ -91,6 +91,8 @@ class GraphSequentialModel():
         self.saver.save(self.session, path)
 
     def load_checkpoint(self, path):
+        if self.saver is None:
+            self.saver = tf.train.Saver()
         self.saver.restore(self.session, path)
 
     def serve(self, path):

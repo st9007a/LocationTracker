@@ -35,4 +35,6 @@ if __name__ == '__main__':
 
     model.compile(loss=tf.nn.softmax_cross_entropy_with_logits_v2,
                   train_mask=train_mask, validation_mask=validation_mask, optimizer=optimizer)
+    # model.load_checkpoint('models/test/checkpoint/model.ckpt')
+    # model.serve('models/test/build')
     model.fit(node_features, node_labels, epochs=500000, save_path='models/test')
