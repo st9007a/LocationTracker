@@ -128,19 +128,13 @@ if __name__ == '__main__':
                 place = user + '_?' if checkin[1] == '?' else checkin[1]
                 time_features[nodes[place], checkin[0]] += 1
 
-                if place not in loc_db:
-                    if i - 1 >= 0 and checkins[i - 1][1] != '?':
-                        prev_place = checkins[i - 1][1]
-                        location_features[nodes[place]][loc_db[prev_place]['group']] += 1
-                        print(location_features[nodes[place]])
+                if i - 1 >= 0 and checkins[i - 1][1] != '?':
+                    prev_place = checkins[i - 1][1]
+                    location_features[nodes[place]][loc_db[prev_place]['group']] += 1
 
-                    if i + 1 < len(checkins) and checkins[i + 1][1] != '?':
-                        next_place = checkins[i + 1][1]
-                        location_features[nodes[place]][loc_db[next_place]['group']] += 1
-                        print(location_features[nodes[place]])
-
-                else:
-                    location_features[nodes[place]][loc_db[place]['group']] = 1
+                if i + 1 < len(checkins) and checkins[i + 1][1] != '?':
+                    next_place = checkins[i + 1][1]
+                    location_features[nodes[place]][loc_db[next_place]['group']] += 1
 
     time_features = normalize(time_features)
     location_features = normalize(location_features)
