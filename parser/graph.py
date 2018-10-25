@@ -18,6 +18,14 @@ def normalize_matrix(adj):
 
     return d_mat_inv_sqrt.dot(adj)
 
+def linear_law(time_delta):
+    return (24 - time_delta) / 24
+
+def power_law(time_delta, k=0.5):
+    if time_delta == 0:
+        return 1
+    return time_delta ** (-k)
+
 if __name__ == '__main__':
 
 
@@ -89,10 +97,10 @@ if __name__ == '__main__':
                 if y_id + '-' + y_id not in edges:
                     edges[y_id + '-' + y_id] = {'coord': (y_ind, y_ind), 'weight': 1}
 
-                edges[x_id + '-' + y_id]['weight'] += (24 - time) / 24
+                edges[x_id + '-' + y_id]['weight'] += power_law(time)
 
                 if x_id != y_id:
-                    edges[y_id + '-' + x_id]['weight'] += 0.1 * (24 - time) / 24
+                    edges[y_id + '-' + x_id]['weight'] += 0.1 * power_law(time)
 
     edges = [edges[edge_id] for edge_id in edges]
     rows = [edge['coord'][0] for edge in edges]
@@ -106,7 +114,8 @@ if __name__ == '__main__':
     sparse.save_npz('output/graph.npz', graph)
 
     # Third pass: build node features
-    features = np.zeros((graph_size, 24))
+    time_features = np.zeros((graph_size, 24))
+    location_features = np.zeros((graph_size, 6))
     with open('raw/checkins_missing.txt', 'r') as f:
         for line in f:
             user, checkins = line.rstrip('\n').split(':')
@@ -115,11 +124,27 @@ if __name__ == '__main__':
             checkins = [(int(checkins[i]), checkins[i + 1]) for i in range(0, len(checkins), 2)]
             checkins = [el for el in checkins if el[1] == '?' or loc_db[el[1]]['country'] == 'US']
 
-            for checkin in checkins:
+            for i, checkin in enumerate(checkins):
                 place = user + '_?' if checkin[1] == '?' else checkin[1]
-                features[nodes[place], checkin[0]] += 1
+                time_features[nodes[place], checkin[0]] += 1
 
-    features = normalize(features)
+                if place not in loc_db:
+                    if i - 1 >= 0 and checkins[i - 1][1] != '?':
+                        prev_place = checkins[i - 1][1]
+                        location_features[nodes[place]][loc_db[prev_place]['group']] += 1
+                        print(location_features[nodes[place]])
+
+                    if i + 1 < len(checkins) and checkins[i + 1][1] != '?':
+                        next_place = checkins[i + 1][1]
+                        location_features[nodes[place]][loc_db[next_place]['group']] += 1
+                        print(location_features[nodes[place]])
+
+                else:
+                    location_features[nodes[place]][loc_db[place]['group']] = 1
+
+    time_features = normalize(time_features)
+    location_features = normalize(location_features)
+    features = np.concatenate([time_features, location_features], axis=1)
     save_pkl('output/features.pkl', features)
 
     # Fourth pass: build node labels

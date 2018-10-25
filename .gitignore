@@ -1,6 +1,6 @@
 raw/
 output/
-features/
 models/
+result/
 .ipynb_checkpoints/
 __pycache__/
