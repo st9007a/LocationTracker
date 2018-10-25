@@ -12,6 +12,19 @@ SIGNATURE_OUTPUT = 'output'
 SIGNATURE_METHOD_NAME = 'prediction'
 SIGNATURE_KEY = 'prediction'
 
+def top_k_accuracy(y_true, y_pred, k):
+    total = y_true.shape[0]
+    p = 0
+
+    top_k_indices = np.argsort(y_pred, axis=1)[:, -k:]
+    ground_truth = np.argmax(y_true, axis=1)
+
+    for label, candidates in zip(ground_truth, top_k_indices):
+        if label in candidates:
+            p += 1
+
+    return p / total
+
 class GraphSequentialModel():
 
     _count = 0
@@ -54,12 +67,15 @@ class GraphSequentialModel():
             self.loss = tf.nn.embedding_lookup(self.loss, train_mask)
             self.metric = tf.nn.embedding_lookup(self.loss, validation_mask)
 
+            self.train_mask = train_mask
+            self.validation_mask = validation_mask
+
             self.train_step = optimizer.build(self.loss)
             self.session = tf.Session()
             self.session.run(tf.global_variables_initializer())
 
-    def fit(self,x, y, epochs, save_path):
-        min_va_loss = 1e10
+    def fit(self,x, y, epochs, save_path, k):
+        max_top_k_acc = 0
         checkpoint_dir = save_path + '/checkpoint'
         checkpoint_path = checkpoint_dir + '/model.ckpt'
         savedmodel_path = save_path + '/build'
@@ -68,18 +84,18 @@ class GraphSequentialModel():
             os.makedirs(checkpoint_dir)
 
         for epoch in range(1, epochs + 1):
-            tr_loss, _ = self.session.run([self.loss, self.train_step], feed_dict= {self.x: x, self.y: y, learning_phase(): True})
-            va_loss = self.session.run(self.metric, feed_dict={self.x: x, self.y: y, learning_phase(): False})
+            self.session.run(self.train_step, feed_dict= {self.x: x, self.y: y, learning_phase(): True})
 
             if epoch % 100 == 0:
-                va_loss = np.mean(va_loss)
-                tr_loss = np.mean(tr_loss)
+                prob = self.session.run(self.prediction, feed_dict= {self.x: x, self.y: y, learning_phase(): False})
+                top_k_acc = top_k_accuracy(y[self.validation_mask], prob[self.validation_mask], k=k)
 
-                if min_va_loss > va_loss:
-                    min_va_loss = va_loss
+                if max_top_k_acc < top_k_acc:
+                    max_top_k_acc = top_k_acc
                     self.save_checkpoint(checkpoint_path)
 
-                print('Epoch: %06d, Train Loss: %.6f, Validation Loss: %.6f, Best Va Loss: %.6f' % (epoch, tr_loss, va_loss, min_va_loss))
+                # print('Epoch: %06d, Train Loss: %.6f, Validation Loss: %.6f, Best Va Loss: %.6f' % (epoch, tr_loss, va_loss, min_va_loss))
+                print('Epoch: %06d, Validation Acc: %.6f, Best Acc: %.6f' % (epoch, top_k_acc, max_top_k_acc))
 
         self.load_checkpoint(checkpoint_path)
         self.serve(savedmodel_path)
@@ -110,6 +126,7 @@ class GraphSequentialModel():
 class Evaluator():
 
     def __init__(self, path):
+        tf.reset_default_graph()
 
         self.session = tf.Session()
 

@@ -20,17 +20,30 @@ def top_k_accuracy(y_true, y_pred, k):
 
     return p / total
 
+def get_test_mask():
+    u_m_pair = read_pkl('output/user_miss_pair.pkl')
+    nodes = read_pkl('output/nodes.pkl')
+
+    return [nodes.index(el) for el in u_m_pair]
+
 if __name__ == '__main__':
     model_path = sys.argv[1]
 
     train_mask = read_pkl('%s/train.mask.pkl' % model_path)
     validation_mask = read_pkl('%s/validation.mask.pkl' % model_path)
-    test_mask = read_pkl('features/test.mask.pkl')
-    node_features = np.load('features/nodes.npy')
-    node_labels = np.load('features/labels.npy')
+    test_mask = get_test_mask()
+    node_features = read_pkl('output/features.pkl')
+    node_labels = read_pkl('output/labels.pkl')
 
     model = Evaluator(model_path)
     proba = model.eval(node_features)
+    # print(proba[validation_mask][0])
+    # print(proba[validation_mask][0][160])
+    # print(proba[validation_mask][0][188])
+    # print(np.argmax(proba[validation_mask][0]))
+    # print(node_labels[validation_mask][0])
+    # print(np.argmax(node_labels[validation_mask][0]))
+    # exit()
 
     print('top 1 train acc:', top_k_accuracy(node_labels[train_mask], proba[train_mask], k=1))
     print('top 1 validation acc:', top_k_accuracy(node_labels[validation_mask], proba[validation_mask], k=1))

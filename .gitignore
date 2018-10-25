@@ -2,4 +2,5 @@ raw/
 output/
 features/
 models/
+.ipynb_checkpoints/
 __pycache__/

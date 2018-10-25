@@ -24,6 +24,7 @@ def read_json(file):
     return obj
 
 def save_pkl(file, obj):
+    print('save file:', file)
     with open(file, 'wb') as p:
         pickle.dump(obj, p, protocol=pickle.HIGHEST_PROTOCOL)
 
