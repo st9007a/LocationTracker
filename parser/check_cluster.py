@@ -7,7 +7,7 @@ from utils.io import read_pkl, distance
 
 if __name__ == '__main__':
 
-    loc_db = read_pkl('output/location.pkl')
+    loc_db = read_pkl('tmp/location.pkl')
     loc_in_checkins = {}
 
     with open('raw/checkins_missing.txt', 'r') as f:
@@ -22,7 +22,7 @@ if __name__ == '__main__':
                 if checkin[1] not in loc_in_checkins:
                     loc_in_checkins[checkin[1]] = [loc_db[checkin[1]]['lat'], loc_db[checkin[1]]['lon']]
 
-    candidate = read_pkl('output/candidate.pkl')
+    candidate = read_pkl('tmp/candidate.pkl')
 
     for cand in candidate:
         if cand not in loc_in_checkins:

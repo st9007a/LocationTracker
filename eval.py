@@ -1,11 +1,23 @@
 #!/usr/bin/env python3
 import sys
+import os
 
 import numpy as np
 from sklearn.metrics import accuracy_score
 
 from utils.tfpkg.models import Evaluator
 from utils.io import read_pkl
+
+model_path = sys.argv[1]
+
+nodes = read_pkl('tmp/nodes.pkl')
+loc_db = read_pkl('tmp/location.pkl')
+categorical = read_pkl('tmp/categorical.pkl')
+candidate = read_pkl('tmp/candidate.pkl')
+train_mask = read_pkl('%s/train.mask.pkl' % model_path)
+validation_mask = read_pkl('%s/validation.mask.pkl' % model_path)
+node_features = read_pkl('tmp/features.pkl')
+node_labels = read_pkl('tmp/labels.pkl')
 
 def top_k_accuracy(y_true, y_pred, k):
     total = y_true.shape[0]
@@ -21,29 +33,28 @@ def top_k_accuracy(y_true, y_pred, k):
     return p / total
 
 def get_test_mask():
-    u_m_pair = read_pkl('output/user_miss_pair.pkl')
-    nodes = read_pkl('output/nodes.pkl')
+    u_m_pair = read_pkl('tmp/user_miss_pair.pkl')
+    nodes = read_pkl('tmp/nodes.pkl')
 
     return [nodes.index(el) for el in u_m_pair]
 
-if __name__ == '__main__':
-    model_path = sys.argv[1]
+def find_place(places, tag, node_idx, user):
 
-    train_mask = read_pkl('%s/train.mask.pkl' % model_path)
-    validation_mask = read_pkl('%s/validation.mask.pkl' % model_path)
-    test_mask = get_test_mask()
-    node_features = read_pkl('output/features.pkl')
-    node_labels = read_pkl('output/labels.pkl')
+    ret = []
+
+    for place in places:
+        if loc_db[place]['tag'] == tag:
+            ret.append(place)
+
+    if len(ret) == 0:
+        return ret
+
+    return ret
+
+if __name__ == '__main__':
 
     model = Evaluator(model_path)
     proba = model.eval(node_features)
-    # print(proba[validation_mask][0])
-    # print(proba[validation_mask][0][160])
-    # print(proba[validation_mask][0][188])
-    # print(np.argmax(proba[validation_mask][0]))
-    # print(node_labels[validation_mask][0])
-    # print(np.argmax(node_labels[validation_mask][0]))
-    # exit()
 
     print('top 1 train acc:', top_k_accuracy(node_labels[train_mask], proba[train_mask], k=1))
     print('top 1 validation acc:', top_k_accuracy(node_labels[validation_mask], proba[validation_mask], k=1))
@@ -62,3 +73,28 @@ if __name__ == '__main__':
 
     print('top 30 train acc:', top_k_accuracy(node_labels[train_mask], proba[train_mask], k=30))
     print('top 30 validation acc:', top_k_accuracy(node_labels[validation_mask], proba[validation_mask], k=30))
+    exit()
+
+    if not os.path.isdir('result'):
+        os.makedirs('result')
+
+    f = open('result/ans.txt', 'w')
+    test_mask = get_test_mask()
+
+    for i in test_mask:
+        user = nodes[i][:-2]
+        pred = proba[i]
+        sort_idx = np.argsort(pred)
+
+        place_list = []
+
+        for j in range(len(sort_idx) - 1, -1, -1):
+            c = categorical[sort_idx[j]]
+            places = find_place(places=candidate, tag=c, node_idx=i, user=user)
+            place_list.extend(places)
+
+        exit()
+
+        # place_list = visited_order(place_list, user)
+
+    f.close()

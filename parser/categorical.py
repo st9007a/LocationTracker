@@ -5,7 +5,7 @@ from utils.io import read_pkl, save_pkl
 
 if __name__ == '__main__':
 
-    loc_db = read_pkl('output/location.pkl')
+    loc_db = read_pkl('tmp/location.pkl')
 
     candidate = {}
     categorical = set()
@@ -34,5 +34,5 @@ if __name__ == '__main__':
     print(categorical)
     print(len(categorical))
 
-    save_pkl('output/categorical.pkl', categorical)
-    save_pkl('output/candidate.pkl', candidate)
+    save_pkl('tmp/categorical.pkl', categorical)
+    save_pkl('tmp/candidate.pkl', candidate)

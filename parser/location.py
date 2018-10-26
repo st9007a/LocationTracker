@@ -9,7 +9,7 @@ chars = 'abcdefghijklmnopqrstuvwxyz'
 
 if __name__ == '__main__':
     in_file = 'raw/loc_id_info.txt'
-    out_dir = 'output'
+    out_dir = 'tmp'
 
     if not os.path.isdir(out_dir):
         os.makedirs(out_dir)

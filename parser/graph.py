@@ -6,9 +6,9 @@ from sklearn.preprocessing import normalize
 
 from utils.io import read_pkl, save_pkl
 
-loc_db = read_pkl('output/location.pkl')
-candidate = read_pkl('output/candidate.pkl')
-categorical = read_pkl('output/categorical.pkl')
+loc_db = read_pkl('tmp/location.pkl')
+candidate = read_pkl('tmp/candidate.pkl')
+categorical = read_pkl('tmp/categorical.pkl')
 
 def normalize_matrix(adj):
     rowsum = np.array(adj.sum(axis=1))
@@ -57,14 +57,14 @@ if __name__ == '__main__':
                     counter += 1
                     nodes[place] = counter
 
-    save_pkl('output/user_miss_pair.pkl', list(u_m_pair))
+    save_pkl('tmp/user_miss_pair.pkl', list(u_m_pair))
     graph_size = len(nodes.keys())
 
     node_list = [0] * graph_size
     for node in nodes:
         node_list[nodes[node]] = node
 
-    save_pkl('output/nodes.pkl', node_list)
+    save_pkl('tmp/nodes.pkl', node_list)
 
     # Second pass: build sparse matrix for graph.
     edges = {}
@@ -111,7 +111,7 @@ if __name__ == '__main__':
 
     graph = sparse.coo_matrix((data, (rows, cols)), shape=(graph_size, graph_size), dtype=np.float32)
     graph = normalize_matrix(graph)
-    sparse.save_npz('output/graph.npz', graph)
+    sparse.save_npz('tmp/graph.npz', graph)
 
     # Third pass: build node features
     time_features = np.zeros((graph_size, 24))
@@ -139,7 +139,7 @@ if __name__ == '__main__':
     time_features = normalize(time_features)
     location_features = normalize(location_features)
     features = np.concatenate([time_features, location_features], axis=1)
-    save_pkl('output/features.pkl', features)
+    save_pkl('tmp/features.pkl', features)
 
     # Fourth pass: build node labels
     labels = np.zeros((graph_size, len(categorical)))
@@ -149,4 +149,4 @@ if __name__ == '__main__':
             labels[nodes[node]][categorical.index(loc_db[node]['tag'])] = 1
 
     print(np.sum(labels))
-    save_pkl('output/labels.pkl', labels)
+    save_pkl('tmp/labels.pkl', labels)
