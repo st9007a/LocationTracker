@@ -18,6 +18,7 @@ train_mask = read_pkl('%s/train.mask.pkl' % model_path)
 validation_mask = read_pkl('%s/validation.mask.pkl' % model_path)
 node_features = read_pkl('tmp/features.pkl')
 node_labels = read_pkl('tmp/labels.pkl')
+user_checkins = read_pkl('tmp/user_checkins.pkl')
 
 def top_k_accuracy(y_true, y_pred, k):
     total = y_true.shape[0]
@@ -38,7 +39,7 @@ def get_test_mask():
 
     return [nodes.index(el) for el in u_m_pair]
 
-def find_place(places, tag, node_idx, user):
+def find_place(places, tag, node_idx):
 
     ret = []
 
@@ -49,7 +50,29 @@ def find_place(places, tag, node_idx, user):
     if len(ret) == 0:
         return ret
 
+    # sort by group
+    group_order = np.argsort(node_features[node_idx][-6:]).tolist()
+    ret.sort(key=lambda x: group_order.index(loc_db[x]['group']))
+    ret.reverse()
+
     return ret
+
+def decrease_visited(place_list, user):
+    length = len(place_list)
+    i = 0
+
+    while i < length:
+        place = place_list[i]
+
+        if place not in user_checkins[user]:
+            i += 1
+            continue
+
+        place_list.remove(place)
+        place_list.append(place)
+        length -= 1
+
+    return place_list
 
 if __name__ == '__main__':
 
@@ -73,13 +96,12 @@ if __name__ == '__main__':
 
     print('top 30 train acc:', top_k_accuracy(node_labels[train_mask], proba[train_mask], k=30))
     print('top 30 validation acc:', top_k_accuracy(node_labels[validation_mask], proba[validation_mask], k=30))
-    exit()
 
     if not os.path.isdir('result'):
         os.makedirs('result')
 
-    f = open('result/ans.txt', 'w')
     test_mask = get_test_mask()
+    f = open('result/ans.txt', 'w')
 
     for i in test_mask:
         user = nodes[i][:-2]
@@ -90,11 +112,10 @@ if __name__ == '__main__':
 
         for j in range(len(sort_idx) - 1, -1, -1):
             c = categorical[sort_idx[j]]
-            places = find_place(places=candidate, tag=c, node_idx=i, user=user)
+            places = find_place(places=candidate, tag=c, node_idx=i)
             place_list.extend(places)
 
-        exit()
-
-        # place_list = visited_order(place_list, user)
+        place_list = decrease_visited(place_list, user)
+        f.write('%s:%s\n' % (user, ','.join(place_list)))
 
     f.close()
