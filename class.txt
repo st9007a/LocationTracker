@@ -1,0 +1,478 @@
+1:店面
+  automotiveshop
+  tattooparlor
+  rentalcarlocation
+  kidsstore
+  fishchipsshop
+  clothingstore
+  cosmeticsshop
+  smokeshop
+  sportinggoodsshop
+  newsstand
+  boardshop
+  motorcycleshop
+  bikeshop
+  bookstore
+  miscellaneousshop
+  recordshop
+  videostore
+  videogamestore
+  womensstore
+  mobilephoneshop
+  toygamestore
+  lingeriestore
+  bikerentalbikeshare
+  grocerystore
+  liquorstore
+  accessoriesstore
+  camerastore
+  hobbyshop
+  opticalshop
+  giftshop
+  tailorshop
+  wineshop
+  bridalshop
+  jewelrystore
+  shoestore
+  mensstore
+  boutique
+  musicstore
+  furniturehomestore
+  flowershop
+  petstore
+  artscraftsstore
+  electronicsstore
+  conveniencestore
+  collegebookstore
+  hardwarestore
+  antiqueshop
+  thriftvintagestore
+  paperofficesuppliesstore
+2:市集
+  market
+  fishmarket
+  farmersmarket
+  mall
+  departmentstore
+  fleamarket
+3:大範圍區域
+  island
+  city
+4:夜晚娛樂
+  pub
+  othernightlife
+  nightlifespot
+  gastropub
+5:俱樂部
+  stripclub
+  nightclub
+  rockclub
+  jazzclub
+  comedyclub
+  casino [賭場]
+6:酒吧
+  sakebar
+  cocktailbar
+  juicebar
+  winebar
+  gaybar
+  hookahbar
+  whiskybar
+  bar
+  hotelbar
+7:室內運動
+  gym
+  field
+  hockeyfield
+  tennis
+  skichalet
+  gympool
+  bowlingalley
+  stadium
+  dancestudio
+  athleticsport
+  climbinggym
+  skilodge
+  hockeyarena
+  athleticssports
+  gymfitnesscenter
+  martialartsdojo
+  poolhall
+  apresskibar
+  skitrail
+  collegegym
+  skatingrink
+  baseballstadium
+  hotelpool
+  tenniscourt
+  collegebasketballcourt
+  trackstadium
+  skiarea
+  basketballcourt
+  footballstadium
+  sportsbar
+  yogastudio
+  skichairlift
+  basketballstadium
+  soccerstadium
+  collegestadium
+8:室外運動
+  playground
+  surfspot
+  golfcourse
+  soccerfield
+  hikingtrail
+  rockclimbingspot
+  volleyballcourt
+  racetrack
+  trails
+  collegefootballfield
+  baseballfield
+9:學校
+  university
+  collegeclassroom
+  collegeuniversity
+  collegecommunicationsbuilding
+  collegeengineeringbuilding
+  collegesoccerfield
+  laboratory
+  collegehistorybuilding
+  lawschool
+  collegebaseballdiamond
+  collegetechnologybuilding
+  medicalschool
+  collegeartsbuilding
+  collegequad
+  collegeacademicbuilding
+  tradeschool
+  highschool
+  collegemathbuilding
+  collegetrack
+  school
+  collegesciencebuilding
+  collegelibrary
+  musicschool
+  collegelab
+  elementaryschool
+  generalcollegeuniversity
+  middleschool
+  communitycollege
+  collegereccenter
+  collegeadministrativebuilding
+10:
+  policestation
+11:工廠
+  factory
+  winery
+  distillery
+  brewery
+12:辦公室
+  office
+  dentistoffice
+  doctorsoffice
+  realestateoffice
+  campaignoffice
+13:政府相關
+  governmentbuilding
+  cityhall
+  embassyconsulate
+  capitolbuilding
+14:醫療
+  hospital
+  medicalcenter
+  drugstorepharmacy
+  emergencyroom
+15:航空
+  airportgate
+  airportterminal
+  airportfoodcourt
+  airporttram
+  airportlounge
+  plane
+  airport
+16:室內景點
+  museum
+  historymuseum
+  sciencemuseum
+  artgallery
+  planetarium
+  aquarium
+  operahouse
+  artmuseum
+17:餐廳
+  turkishrestaurant
+  burgerjoint
+  tapasrestaurant
+  falafelrestaurant
+  cafeteria
+  ramennoodlehouse
+  healthfoodstore
+  latinamericanrestaurant
+  dumplingrestaurant
+  middleeasternrestaurant
+  bbqjoint
+  fastfoodrestaurant
+  japaneserestaurant
+  bedbreakfast
+  easterneuropeanrestaurant
+  afghanrestaurant
+  africanrestaurant
+  filipinorestaurant
+  scandinavianrestaurant
+  moroccanrestaurant
+  asianrestaurant
+  australianrestaurant
+  newamericanrestaurant
+  cajuncreolerestaurant
+  vegetarianveganrestaurant
+  restaurant
+  argentinianrestaurant
+  indianrestaurant
+  portugueserestaurant
+  breakfastspot
+  mexicanrestaurant
+  indonesianrestaurant
+  dimsumrestaurant
+  greekrestaurant
+  brazilianrestaurant
+  sushirestaurant
+  southamericanrestaurant
+  malaysianrestaurant
+  southernsoulfoodrestaurant
+  collegecafeteria
+  ethiopianrestaurant
+  friedchickenjoint
+  moleculargastronomyrestaurant
+  seafoodrestaurant
+  saladplace
+  soupplace
+  chineserestaurant
+  italianrestaurant
+  glutenfreerestaurant
+  maccheesejoint
+  frenchrestaurant
+  steakhouse
+  cubanrestaurant
+  thairestaurant
+  burritoplace
+  spanishrestaurant
+  swissrestaurant
+  koreanrestaurant
+  areparestaurant
+  mediterraneanrestaurant
+  vietnameserestaurant
+  snakeplace
+  wingsjoint
+  caribbeanrestaurant
+  pizzaplace
+  germanrestaurant
+  foodcourt
+  tacoplace
+  americanrestaurant
+  coffeeshop
+  delibodega
+  gourmetshop
+  mongolianrestaurant
+  hotdogjoint
+  peruvianrestaurant
+  paellarestaurant
+  sandwichplace
+18:食物店
+  cupcakeshop
+  donutshop
+  diner
+  dessertshop
+  fooddrinkshop
+  foodtruck
+  food
+  yogurt
+  frozenyogurt
+  caf
+  bagelshop
+  candystore
+  icecreamshop
+  cheeseshop
+  bakery
+19:金融
+  creditunion
+  postoffice
+  bank
+  financialorlegalservice
+20:居住
+  homeprivate
+  residence
+  collegeresidencehall
+  hostel
+  motel
+  hotel
+  residentialbuildingapartmentcondo
+  neighborhood
+21:托兒
+  daycare
+  nurseryschool
+22:
+  militarybase
+23:室內娛樂
+  generalentertainment
+  gamingcafe
+  internetcafe
+  karaokebar
+24:交通
+  track
+  taxi
+  platform
+  busstation
+  boatorferry
+  trainstation
+  gasstationgarage
+  subway
+  busline
+  train
+  lightrail
+  ferry
+  road
+  harbormarina
+  movingtarget
+  divebar
+25:室外空間
+  themeparkrideattraction
+  plaza
+  waterpark
+  eventspace
+  skatepark
+  park
+  othergreatoutdoors
+  musicvenue
+  beergarden
+  outdoorsrecreation
+  campground
+26:
+  dogrun
+27:室外景點
+  lighthouse
+  bridge
+  pier
+  sceniclookout
+  garden
+  vineyard
+  zoo
+  fair
+  pool
+  historicsite
+  sculpturegarden
+  arcade
+  volcano
+  volcanoes
+  gardencenter
+  trail
+  themepark
+  monumentlandmark
+  farm
+  beach
+  resort
+  well
+  lake
+  river
+  hotspring
+28:聚會處
+  conferenceroom
+  conventioncenter
+  auditorium
+  synagogue
+  studentcenter
+  collegeauditorium
+  fraternityhouse
+  sororityhouse
+29:
+  animalshelter
+30:服務
+  carwash
+  laundryservice
+  shopservice
+31:建築
+  building
+  castle
+32:美容
+  spamassage
+  nailsalon
+  tanningsalon
+  salonbarbershop
+33:室內休閒
+  pianobar
+  tearoom
+34:
+  parking
+35:
+  housingdevelopment
+36:宗教場所
+  mosque
+  temple
+  church
+  shrine
+37:
+  multiplex
+38:寵物服務
+  petservice
+  veterinarian
+39:
+  cardealership
+40:
+  spiritualcenter
+41:工作室
+  photographylab
+  designstudio
+  professionalotherplaces
+42:
+  butcher
+43:旅遊
+  travelagency
+  traveltransport
+  travellounge
+  touristinformationcenter
+  generaltravel
+44:藝術
+  performingartsven
+  artsentertainment
+  publicart
+  concerthall
+45:
+  firestation
+46:戲院
+  collegetheater
+  movietheater
+  indietheater
+  indiemovietheater
+  theater
+47:殯葬
+  cemetery
+  funeralhome
+48:
+  techstartup
+49:
+  recyclingfacility
+50:
+  stables
+51:
+  radiostation
+52:
+  speakeasy
+53:
+  nonprofit
+54:
+  votingbooth
+55:
+  restarea
+56:
+  storagefacility
+57:
+  library
+58:
+  courthouse
+59:
+  assistedliving
+60:室內空間
+  lounge
+  meetingroom
+  coworkingspace
+61:
+  roofdeck
