@@ -39,8 +39,8 @@ if __name__ == '__main__':
     save_pkl('%s/validation.mask.pkl' % model_path, validation_mask)
 
     model = GraphSequentialModel()
-    model.add(GraphConvoluation(adj_matrix=adj_matrix, units=256, activation=tf.nn.relu, kernel_regularizer=5e-5, bias_regularizer=5e-5, input_shape=(30,)))
-    model.add(GraphConvoluation(adj_matrix=adj_matrix, units=512, activation=tf.nn.relu, kernel_regularizer=5e-5, bias_regularizer=5e-5))
+    model.add(GraphConvoluation(adj_matrix=adj_matrix, units=256, activation=tf.nn.relu, kernel_regularizer=1e-4, bias_regularizer=1e-4, input_shape=(30,)))
+    model.add(GraphConvoluation(adj_matrix=adj_matrix, units=512, activation=tf.nn.relu, kernel_regularizer=1e-4, bias_regularizer=1e-4))
     model.add(Dropout(0.8))
     model.add(GraphConvoluation(adj_matrix=adj_matrix, units=node_labels.shape[1]))
 
@@ -50,4 +50,4 @@ if __name__ == '__main__':
                   train_mask=train_mask, validation_mask=validation_mask, optimizer=optimizer)
     # model.load_checkpoint('models/test3/checkpoint/model.ckpt')
     # model.serve('models/test3/build')
-    model.fit(node_features, node_labels, epochs=5000, save_path=model_path, k=5)
+    model.fit(node_features, node_labels, epochs=5000, save_path=model_path, k=1)

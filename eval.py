@@ -10,9 +10,11 @@ from utils.io import read_pkl
 
 model_path = sys.argv[1]
 
+with open('tmp/numclasses.txt', 'r') as f:
+    num_classes = int(f.read().rstrip('\n'))
+
 nodes = read_pkl('tmp/nodes.pkl')
 loc_db = read_pkl('tmp/location.pkl')
-categorical = read_pkl('tmp/categorical.pkl')
 candidate = read_pkl('tmp/candidate.pkl')
 train_mask = read_pkl('%s/train.mask.pkl' % model_path)
 validation_mask = read_pkl('%s/validation.mask.pkl' % model_path)
@@ -108,8 +110,7 @@ if __name__ == '__main__':
         place_list = []
 
         for j in range(len(sort_idx) - 1, -1, -1):
-            c = categorical[sort_idx[j]]
-            places = find_place(places=candidate, tag=c, node_idx=i)
+            places = find_place(places=candidate, tag=sort_idx[j], node_idx=i)
             place_list.extend(places)
 
         place_list = decrease_visited(place_list, user)
