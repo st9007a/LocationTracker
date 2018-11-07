@@ -50,4 +50,4 @@ if __name__ == '__main__':
                   train_mask=train_mask, validation_mask=validation_mask, optimizer=optimizer)
     # model.load_checkpoint('models/test3/checkpoint/model.ckpt')
     # model.serve('models/test3/build')
-    model.fit(node_features, node_labels, epochs=5000, save_path=model_path, k=1)
+    model.fit(node_features, node_labels, epochs=5000, save_path=model_path, k=5)

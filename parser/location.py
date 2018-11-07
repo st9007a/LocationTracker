@@ -7,6 +7,9 @@ from utils.io import save_pkl
 
 chars = 'abcdefghijklmnopqrstuvwxyz'
 
+def word_normalize(word):
+    return ''.join([c for c in word.lower() if c in chars])
+
 if __name__ == '__main__':
     in_file = 'raw/loc_id_info.txt'
     out_dir = 'tmp'
@@ -15,6 +18,17 @@ if __name__ == '__main__':
         os.makedirs(out_dir)
 
     loc_db = {}
+    # tag2class = {}
+    # ptr = -1
+    #
+    # with open(in_file_1, 'r') as f:
+    #     for line in f:
+    #         if line[0] != ' ':
+    #             ptr += 1
+    #             continue
+    #
+    #         tag2class[word_normalize(line)] = ptr
+    # print(tag2class)
 
     with open(in_file, 'r') as f:
 
@@ -23,7 +37,7 @@ if __name__ == '__main__':
             loc_db[data[0]] = {
                 'lat': float(data[1]),
                 'lon': float(data[2]),
-                'tag': ''.join([c for c in data[3].lower() if c in chars]),
+                'tag': word_normalize(data[3]),
                 'country': data[4],
             }
 

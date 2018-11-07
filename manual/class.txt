@@ -63,13 +63,13 @@
   othernightlife
   nightlifespot
   gastropub
+  casino
 5:俱樂部
   stripclub
   nightclub
   rockclub
   jazzclub
   comedyclub
-  casino [賭場]
 6:酒吧
   sakebar
   cocktailbar
@@ -169,6 +169,7 @@
 12:辦公室
   office
   dentistoffice
+  dentistsoffice
   doctorsoffice
   realestateoffice
   campaignoffice
@@ -261,7 +262,7 @@
   areparestaurant
   mediterraneanrestaurant
   vietnameserestaurant
-  snakeplace
+  snackplace
   wingsjoint
   caribbeanrestaurant
   pizzaplace
@@ -431,7 +432,7 @@
   touristinformationcenter
   generaltravel
 44:藝術
-  performingartsven
+  performingartsvenue
   artsentertainment
   publicart
   concerthall

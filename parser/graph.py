@@ -146,7 +146,7 @@ if __name__ == '__main__':
 
     for node in nodes:
         if node not in u_m_pair:
-            labels[nodes[node]][categorical.index(loc_db[node]['tag'])] = 1
+            labels[nodes[node]][categorical.index(loc_db[node]['class'])] = 1
 
     print(np.sum(labels))
     save_pkl('tmp/labels.pkl', labels)

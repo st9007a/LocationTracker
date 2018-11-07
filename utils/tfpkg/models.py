@@ -42,10 +42,7 @@ class GraphSequentialModel():
 
     def compile(self, loss, train_mask, validation_mask, optimizer):
 
-        for i in range(len(self.layers)):
-            if i == 0:
-                continue
-
+        for i in range(1, len(self.layers)):
             self.layers[i].input_shape = self.layers[i - 1].compute_output_shape()
 
         with tf.name_scope(self.name):

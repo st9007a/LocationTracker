@@ -44,7 +44,7 @@ def find_place(places, tag, node_idx):
     ret = []
 
     for place in places:
-        if loc_db[place]['tag'] == tag:
+        if loc_db[place]['class'] == tag:
             ret.append(place)
 
     if len(ret) == 0:
@@ -93,9 +93,6 @@ if __name__ == '__main__':
     print('top 5 validation acc:', top_k_accuracy(node_labels[validation_mask], proba[validation_mask], k=5))
 
     print()
-
-    print('top 30 train acc:', top_k_accuracy(node_labels[train_mask], proba[train_mask], k=30))
-    print('top 30 validation acc:', top_k_accuracy(node_labels[validation_mask], proba[validation_mask], k=30))
 
     if not os.path.isdir('result'):
         os.makedirs('result')
