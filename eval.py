@@ -78,8 +78,8 @@ def decrease_visited(place_list, user):
 
 if __name__ == '__main__':
 
-    model = Evaluator(model_path)
-    proba = model.eval(node_features)
+    models = [Evaluator(model_path + '/' + str(i)) for i in range(5)]
+    proba = sum([model.eval(node_features) for model in models]) / 5
 
     print('top 1 train acc:', top_k_accuracy(node_labels[train_mask], proba[train_mask], k=1))
     print('top 1 validation acc:', top_k_accuracy(node_labels[validation_mask], proba[validation_mask], k=1))

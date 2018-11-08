@@ -4,7 +4,7 @@ import os
 import numpy as np
 import tensorflow as tf
 
-from .backend import learning_phase
+from .layers import GraphConvolution
 
 LEARNING_PHASE = 'learning_phase'
 SIGNATURE_INPUT = 'input'
@@ -29,13 +29,23 @@ class GraphSequentialModel():
 
     _count = 0
 
-    def __init__(self):
+    def __init__(self, adj_matrix):
         GraphSequentialModel._count += 1
 
         self.name = 'Model_' + str(GraphSequentialModel._count)
+        self.graph = tf.Graph()
         self.layers = []
         self.saver = None
         self.builder = None
+        self.adj_matrix = adj_matrix.tocoo()
+
+        with self.graph.as_default():
+            indices = [[row, col] for row, col in zip(self.adj_matrix.row, self.adj_matrix.col)]
+
+            self.adj_matrix_tensor = tf.SparseTensor(indices=indices,
+                                                            values=self.adj_matrix.data,
+                                                            dense_shape=self.adj_matrix.shape)
+
 
     def add(self, layer):
         self.layers.append(layer)
@@ -45,31 +55,37 @@ class GraphSequentialModel():
         for i in range(1, len(self.layers)):
             self.layers[i].input_shape = self.layers[i - 1].compute_output_shape()
 
-        with tf.name_scope(self.name):
-            self.x = tf.placeholder(tf.float32, shape=(None,) + self.layers[0].input_shape, name='input')
-            self.y = tf.placeholder(tf.float32, shape=(None,) + self.layers[-1].compute_output_shape())
+        for i in range(len(self.layers)):
+            if isinstance(self.layers[i], GraphConvolution):
+                self.layers[i].set_adj_matrix(self.adj_matrix_tensor)
 
-            out = self.x
+        with self.graph.as_default():
+            with tf.name_scope(self.name):
+                self.x = tf.placeholder(tf.float32, shape=(None,) + self.layers[0].input_shape, name='input')
+                self.y = tf.placeholder(tf.float32, shape=(None,) + self.layers[-1].compute_output_shape())
+                self.learning_phase = tf.placeholder(tf.bool)
 
-            for layer in self.layers:
-                out = layer(out)
+                out = self.x
 
-            self.logits = out
-            self.prediction = tf.nn.softmax(out, name='prediction')
-            self.loss = loss(labels=self.y, logits=self.logits)
+                for layer in self.layers:
+                    out = layer(out, self.learning_phase)
 
-            if len(tf.get_collection('%s/regularizer' % tf.get_default_graph().get_name_scope())) > 0:
-                self.loss += tf.add_n(tf.get_collection('%s/regularizer' % tf.get_default_graph().get_name_scope()))
+                self.logits = out
+                self.prediction = tf.nn.softmax(out, name='prediction')
+                self.loss = loss(labels=self.y, logits=self.logits)
 
-            self.loss = tf.nn.embedding_lookup(self.loss, train_mask)
-            self.metric = tf.nn.embedding_lookup(self.loss, validation_mask)
+                if len(tf.get_collection('%s/regularizer' % tf.get_default_graph().get_name_scope())) > 0:
+                    self.loss += tf.add_n(tf.get_collection('%s/regularizer' % tf.get_default_graph().get_name_scope()))
 
-            self.train_mask = train_mask
-            self.validation_mask = validation_mask
+                self.loss = tf.nn.embedding_lookup(self.loss, train_mask)
+                self.metric = tf.nn.embedding_lookup(self.loss, validation_mask)
 
-            self.train_step = optimizer.build(self.loss)
-            self.session = tf.Session()
-            self.session.run(tf.global_variables_initializer())
+                self.train_mask = train_mask
+                self.validation_mask = validation_mask
+
+                self.train_step = optimizer.build(self.loss)
+                self.session = tf.Session()
+                self.session.run(tf.global_variables_initializer())
 
     def fit(self,x, y, epochs, save_path, k):
         max_top_k_acc = 0
@@ -81,10 +97,10 @@ class GraphSequentialModel():
             os.makedirs(checkpoint_dir)
 
         for epoch in range(1, epochs + 1):
-            self.session.run(self.train_step, feed_dict= {self.x: x, self.y: y, learning_phase(): True})
+            self.session.run(self.train_step, feed_dict= {self.x: x, self.y: y, self.learning_phase: True})
 
             if epoch % 100 == 0:
-                prob = self.session.run(self.prediction, feed_dict= {self.x: x, self.y: y, learning_phase(): False})
+                prob = self.session.run(self.prediction, feed_dict= {self.x: x, self.y: y, self.learning_phase: False})
                 top_k_acc = top_k_accuracy(y[self.validation_mask], prob[self.validation_mask], k=k)
 
                 if max_top_k_acc < top_k_acc:
@@ -97,46 +113,56 @@ class GraphSequentialModel():
         self.load_checkpoint(checkpoint_path)
         self.serve(savedmodel_path)
 
-    def save_checkpoint(self, path):
-        if self.saver is None:
-            self.saver = tf.train.Saver()
+        return max_top_k_acc
 
-        self.saver.save(self.session, path)
+    def save_checkpoint(self, path):
+        with self.graph.as_default():
+            if self.saver is None:
+                self.saver = tf.train.Saver()
+
+            self.saver.save(self.session, path)
 
     def load_checkpoint(self, path):
-        if self.saver is None:
-            self.saver = tf.train.Saver()
-        self.saver.restore(self.session, path)
+        with self.graph.as_default():
+            if self.saver is None:
+                self.saver = tf.train.Saver()
+            self.saver.restore(self.session, path)
 
     def serve(self, path):
-        if self.builder is None:
-            self.builder = tf.saved_model.builder.SavedModelBuilder(path)
+        with self.graph.as_default():
+            if self.builder is None:
+                self.builder = tf.saved_model.builder.SavedModelBuilder(path)
 
-        inputs = {LEARNING_PHASE: tf.saved_model.utils.build_tensor_info(learning_phase()),
-                  SIGNATURE_INPUT: tf.saved_model.utils.build_tensor_info(self.x)}
+            inputs = {LEARNING_PHASE: tf.saved_model.utils.build_tensor_info(self.learning_phase),
+                      SIGNATURE_INPUT: tf.saved_model.utils.build_tensor_info(self.x)}
 
-        outputs = {SIGNATURE_OUTPUT: tf.saved_model.utils.build_tensor_info(self.prediction)}
-        signature = tf.saved_model.signature_def_utils.build_signature_def(inputs, outputs, SIGNATURE_METHOD_NAME)
-        self.builder.add_meta_graph_and_variables(self.session, tags=[tf.saved_model.tag_constants.SERVING], signature_def_map={SIGNATURE_KEY: signature})
-        self.builder.save()
+            outputs = {SIGNATURE_OUTPUT: tf.saved_model.utils.build_tensor_info(self.prediction)}
+            signature = tf.saved_model.signature_def_utils.build_signature_def(inputs, outputs, SIGNATURE_METHOD_NAME)
+            self.builder.add_meta_graph_and_variables(self.session, tags=[tf.saved_model.tag_constants.SERVING], signature_def_map={SIGNATURE_KEY: signature})
+            self.builder.save()
 
 class Evaluator():
 
     def __init__(self, path):
-        tf.reset_default_graph()
 
-        self.session = tf.Session()
+        self.graph = tf.Graph()
 
-        meta_graph_def = tf.saved_model.loader.load(self.session, [tf.saved_model.tag_constants.SERVING], '%s/build/' % path)
-        signature = meta_graph_def.signature_def
+        with self.graph.as_default():
+            self.session = tf.Session()
 
-        input_tensor_name = signature[SIGNATURE_KEY].inputs[SIGNATURE_INPUT].name
-        learning_phase_tensor_name = signature[SIGNATURE_KEY].inputs[LEARNING_PHASE].name
-        output_tensor_name = signature[SIGNATURE_KEY].outputs[SIGNATURE_OUTPUT].name
+            meta_graph_def = tf.saved_model.loader.load(self.session, [tf.saved_model.tag_constants.SERVING], '%s/build/' % path)
+            signature = meta_graph_def.signature_def
 
-        self.input_holder = self.session.graph.get_tensor_by_name(input_tensor_name)
-        self.prediction = self.session.graph.get_tensor_by_name(output_tensor_name)
-        self.learning_phase = self.session.graph.get_tensor_by_name(learning_phase_tensor_name)
+            input_tensor_name = signature[SIGNATURE_KEY].inputs[SIGNATURE_INPUT].name
+            learning_phase_tensor_name = signature[SIGNATURE_KEY].inputs[LEARNING_PHASE].name
+            output_tensor_name = signature[SIGNATURE_KEY].outputs[SIGNATURE_OUTPUT].name
+
+            self.input_holder = self.session.graph.get_tensor_by_name(input_tensor_name)
+            self.prediction = self.session.graph.get_tensor_by_name(output_tensor_name)
+            self.learning_phase = self.session.graph.get_tensor_by_name(learning_phase_tensor_name)
 
     def eval(self, x_eval):
-        return self.session.run(self.prediction, feed_dict={self.input_holder: x_eval, self.learning_phase: False})
+        with self.graph.as_default():
+            ret = self.session.run(self.prediction, feed_dict={self.input_holder: x_eval, self.learning_phase: False})
+
+        return ret

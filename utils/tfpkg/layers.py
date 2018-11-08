@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 import tensorflow as tf
 
-from .backend import learning_phase
-
 class Layer():
 
     _count = {}
@@ -32,7 +30,7 @@ class Layer():
         """Initialization and preprocessing."""
         raise NotImplementedError
 
-    def call(self, x):
+    def call(self, x, learning_phase):
         """Build tensorflow operation."""
         raise NotImplementedError
 
@@ -40,9 +38,9 @@ class Layer():
         """Return output shape."""
         raise NotImplementedError
 
-    def __call__(self, x):
+    def __call__(self, x, learning_phase):
         self.build()
-        return self.call(x)
+        return self.call(x, learning_phase)
 
 class Dropout(Layer):
 
@@ -54,29 +52,26 @@ class Dropout(Layer):
     def build(self):
         pass
 
-    def call(self, x):
-        return tf.layers.dropout(x, rate=self.rate, training=learning_phase(), name=self.name)
+    def call(self, x, learning_phase):
+        return tf.layers.dropout(x, rate=self.rate, training=learning_phase, name=self.name)
 
     def compute_output_shape(self):
         return self.input_shape
 
-class GraphConvoluation(Layer):
+class GraphConvolution(Layer):
 
-    def __init__(self, adj_matrix, units, *args, **kwargs):
+    def __init__(self, units, *args, **kwargs):
 
-        self.adj_matrix = adj_matrix.tocoo()
         self.units = units
+        self.sparse_adj_matrix_tensor = None
 
         super().__init__(*args, **kwargs)
 
+    def set_adj_matrix(self, matrix):
+        self.sparse_adj_matrix_tensor = matrix
+
     def build(self):
         with tf.name_scope(self.name):
-
-            indices = [[row, col] for row, col in zip(self.adj_matrix.row, self.adj_matrix.col)]
-
-            self.sparse_adj_matrix_tensor = tf.SparseTensor(indices=indices,
-                                                            values=self.adj_matrix.data,
-                                                            dense_shape=self.adj_matrix.shape)
 
             with tf.variable_scope(self.name):
                 self.kernel = tf.get_variable(
@@ -95,7 +90,7 @@ class GraphConvoluation(Layer):
             tf.add_to_collection('%s/regularizer' % tf.get_default_graph().get_name_scope(),
                                  tf.nn.l2_loss(self.bias) * self.bias_regularizer)
 
-    def call(self, x):
+    def call(self, x, learning_phase):
         with tf.name_scope(self.name):
             out = tf.sparse_tensor_dense_matmul(self.sparse_adj_matrix_tensor, x)
             out = tf.matmul(out, self.kernel)
