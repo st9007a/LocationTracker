@@ -67,8 +67,8 @@ if __name__ == '__main__':
         validation_mask = np.array(masks[i], dtype=int)
 
         model = GraphSequentialModel(adj_matrix=adj_matrix)
-        model.add(GraphConvolution(units=256, activation=tf.nn.relu, kernel_regularizer=2e-4, bias_regularizer=2e-4, input_shape=(30,)))
-        model.add(GraphConvolution(units=512, activation=tf.nn.relu, kernel_regularizer=2e-4, bias_regularizer=2e-4))
+        model.add(GraphConvolution(units=256, activation=tf.nn.relu, kernel_regularizer=1e-4, bias_regularizer=1e-4, input_shape=(30,)))
+        model.add(GraphConvolution(units=512, activation=tf.nn.relu, kernel_regularizer=1e-4, bias_regularizer=1e-4))
         model.add(Dropout(0.8))
         model.add(GraphConvolution(units=node_labels.shape[1]))
 

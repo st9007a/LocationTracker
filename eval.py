@@ -81,21 +81,6 @@ if __name__ == '__main__':
     models = [Evaluator(model_path + '/' + str(i)) for i in range(5)]
     proba = sum([model.eval(node_features) for model in models]) / 5
 
-    print('top 1 train acc:', top_k_accuracy(node_labels[train_mask], proba[train_mask], k=1))
-    print('top 1 validation acc:', top_k_accuracy(node_labels[validation_mask], proba[validation_mask], k=1))
-
-    print()
-
-    print('top 3 train acc:', top_k_accuracy(node_labels[train_mask], proba[train_mask], k=3))
-    print('top 3 validation acc:', top_k_accuracy(node_labels[validation_mask], proba[validation_mask], k=3))
-
-    print()
-
-    print('top 5 train acc:', top_k_accuracy(node_labels[train_mask], proba[train_mask], k=5))
-    print('top 5 validation acc:', top_k_accuracy(node_labels[validation_mask], proba[validation_mask], k=5))
-
-    print()
-
     if not os.path.isdir('result'):
         os.makedirs('result')
 
