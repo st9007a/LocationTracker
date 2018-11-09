@@ -11,7 +11,7 @@ if __name__ == '__main__':
     with open(in_file, 'r') as f:
         for line in f:
             if line[0] != ' ':
-                target = line[2:-1]
+                target = line.rstrip('\n').split(':')[1]
                 continue
 
             tag2class[line[2:-1]] = target

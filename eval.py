@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 import sys
 import os
-import math
 
 import numpy as np
 from sklearn.metrics import accuracy_score
 
 from utils.tfpkg.models import Evaluator
 from utils.io import read_pkl
+from utils.location import distance
 
 model_path = sys.argv[1]
 
@@ -22,16 +22,6 @@ node_labels = read_pkl('tmp/labels.pkl')
 user_checkins = read_pkl('tmp/user_checkins.pkl')
 user_miss_loc = read_pkl('tmp/user_miss_loc.pkl')
 categorical = read_pkl('tmp/categorical.pkl')
-
-def distance(lat1, lon1, lat2, lon2):
-
-    dlat = math.radians(lat2 - lat1)
-    dlon = math.radians(lon2 - lon1)
-
-    a = math.sin(dlat / 2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2)**2
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-
-    return c * 6371e3
 
 def top_k_accuracy(y_true, y_pred, k):
     total = y_true.shape[0]
@@ -111,7 +101,8 @@ if __name__ == '__main__':
         os.makedirs('result')
 
     test_mask = get_test_mask()
-    f = open('result/ans.txt', 'w')
+    f1 = open('result/ans.txt', 'w')
+    f2 = open('result/check.txt', 'w')
 
     for i in test_mask:
         user = nodes[i][:-2]
@@ -119,12 +110,19 @@ if __name__ == '__main__':
         sort_idx = np.argsort(pred)[::-1]
 
         place_list = []
+        tags = []
 
         for j in range(len(sort_idx)):
             places = find_place(places=candidate, tag=categorical[sort_idx[j]], node_idx=i)
             place_list.extend(places)
 
-        place_list = decrease_visited(place_list, user)
-        f.write('%s:%s\n' % (user, ','.join(place_list)))
+            if len(places) != 0:
+                tags.append((categorical[sort_idx[j]], len(places)))
 
-    f.close()
+        place_list = decrease_visited(place_list, user)
+        f1.write('%s:%s\n' % (user, ','.join(place_list)))
+        f2.write(str(tags) + '\n')
+        print(len(tags))
+
+    f1.close()
+    f2.close()

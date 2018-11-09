@@ -87,19 +87,21 @@ if __name__ == '__main__':
                 if time < 0:
                     time += 24
 
-                if x_id + '-' + y_id not in edges:
-                    edges[x_id + '-' + y_id] = {'coord': (x_ind, y_ind), 'weight': 0}
-                if y_id + '-' + x_id not in edges:
-                    edges[y_id + '-' + x_id] = {'coord': (y_ind, x_ind), 'weight': 0}
-                if x_id + '-' + x_id not in edges:
-                    edges[x_id + '-' + x_id] = {'coord': (x_ind, x_ind), 'weight': 1}
-                if y_id + '-' + y_id not in edges:
-                    edges[y_id + '-' + y_id] = {'coord': (y_ind, y_ind), 'weight': 1}
-
-                edges[x_id + '-' + y_id]['weight'] += power_law(time)
-
                 if x_id != y_id:
+                    if x_id + '-' + y_id not in edges:
+                        edges[x_id + '-' + y_id] = {'coord': (x_ind, y_ind), 'weight': 0}
+                    if y_id + '-' + x_id not in edges:
+                        edges[y_id + '-' + x_id] = {'coord': (y_ind, x_ind), 'weight': 0}
+                # if x_id + '-' + x_id not in edges:
+                #     edges[x_id + '-' + x_id] = {'coord': (x_ind, x_ind), 'weight': 1}
+                # if y_id + '-' + y_id not in edges:
+                #     edges[y_id + '-' + y_id] = {'coord': (y_ind, y_ind), 'weight': 1}
+
+                    edges[x_id + '-' + y_id]['weight'] += power_law(time)
                     edges[y_id + '-' + x_id]['weight'] += 0.1 * power_law(time)
+
+    for node in node_list:
+        edges[node + '-' + node] = {'coord': (nodes[node], nodes[node]), 'weight': 1}
 
     edges = [edges[edge_id] for edge_id in edges]
     rows = [edge['coord'][0] for edge in edges]

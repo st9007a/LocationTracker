@@ -3,7 +3,8 @@ import numpy as np
 
 from sklearn.cluster import KMeans
 
-from utils.io import read_pkl, distance, save_pkl
+from utils.io import read_pkl, save_pkl
+from utils.location import distance
 
 if __name__ == '__main__':
 
