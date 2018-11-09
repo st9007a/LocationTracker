@@ -21,6 +21,7 @@ node_features = read_pkl('tmp/features.pkl')
 node_labels = read_pkl('tmp/labels.pkl')
 user_checkins = read_pkl('tmp/user_checkins.pkl')
 user_miss_loc = read_pkl('tmp/user_miss_loc.pkl')
+u_m_pair = read_pkl('tmp/user_miss_pair.pkl')
 categorical = read_pkl('tmp/categorical.pkl')
 
 def top_k_accuracy(y_true, y_pred, k):
@@ -37,9 +38,6 @@ def top_k_accuracy(y_true, y_pred, k):
     return p / total
 
 def get_test_mask():
-    u_m_pair = read_pkl('tmp/user_miss_pair.pkl')
-    nodes = read_pkl('tmp/nodes.pkl')
-
     return [nodes.index(el) for el in u_m_pair]
 
 def get_average_distance(user, place):
