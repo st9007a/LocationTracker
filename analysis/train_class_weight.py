@@ -5,6 +5,7 @@ import numpy as np
 
 from utils.io import read_pkl
 
+loc_db = read_pkl('tmp/location.pkl')
 categorical = read_pkl('tmp/categorical.pkl')
 labels = read_pkl('tmp/labels.pkl')
 nodes = read_pkl('tmp/nodes.pkl')
@@ -20,11 +21,11 @@ if __name__ == '__main__':
 
     counter = {}
 
-    for i, cidx in enumerate(labels):
-        if i in test_mask:
+    for place in nodes:
+        if place[-1] == '?':
             continue
 
-        c = categorical[cidx]
+        c = loc_db[place]['tag']
 
         if c not in counter:
             counter[c] = 0
@@ -34,5 +35,6 @@ if __name__ == '__main__':
     counter_list = [(k, counter[k]) for k in counter]
     counter_list.sort(key=lambda x:x[1])
     counter_list.reverse()
+    # counter_list = list(filter(lambda x: x[1] > 80, counter_list))
     counter_list = [(el[0], el[1] / labels.shape[0]) for el in counter_list]
     pprint(counter_list)

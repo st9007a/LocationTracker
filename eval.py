@@ -11,9 +11,6 @@ from utils.location import distance
 
 model_path = sys.argv[1]
 
-with open('tmp/numclasses.txt', 'r') as f:
-    num_classes = int(f.read().rstrip('\n'))
-
 nodes = read_pkl('tmp/nodes.pkl')
 loc_db = read_pkl('tmp/location.pkl')
 candidate = read_pkl('tmp/candidate.pkl')
@@ -120,7 +117,6 @@ if __name__ == '__main__':
         place_list = decrease_visited(place_list, user)
         f1.write('%s:%s\n' % (user, ','.join(place_list)))
         f2.write(str(tags) + '\n')
-        print(len(tags))
 
     f1.close()
     f2.close()

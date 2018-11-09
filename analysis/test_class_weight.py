@@ -4,13 +4,14 @@ from pprint import pprint
 from utils.io import read_pkl
 
 candidate = read_pkl('tmp/candidate.pkl')
+loc_db = read_pkl('tmp/location.pkl')
 
 if __name__ == '__main__':
 
     counter = {}
 
     for lid in candidate:
-        c = candidate[lid]['class']
+        c = loc_db[lid]['tag']
 
         if c not in counter:
             counter[c] = 0

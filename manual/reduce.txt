@@ -49,13 +49,10 @@
   collegemathbuilding
   collegesciencebuilding
   collegeadministrativebuilding
-8:office
-  office
+8:doffice
   dentistoffice
   dentistsoffice
   doctorsoffice
-  realestateoffice
-  campaignoffice
 9:air
   airportgate
   airportterminal

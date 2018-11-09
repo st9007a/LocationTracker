@@ -13,18 +13,13 @@ from utils.tfpkg.models import GraphSequentialModel
 from utils.tfpkg.optimizers import Optimizer
 from utils.io import read_pkl, save_pkl
 
-def get_mask(total_size, validation_ratio, exclude_idx):
-    mask = [i for i in range(total_size) if i not in exclude_idx]
-
-    return train_test_split(mask, test_size=validation_ratio)
-
-def get_k_fold_mask(total_size, folds, exclude_idx):
-    mask = [i for i in range(total_size) if i not in exclude_idx]
+def get_k_fold_mask(idx_list, folds):
+    mask = list(idx_list)
     shuffle(mask)
 
     ret = []
-    mod = (total_size - len(exclude_idx)) % folds
-    base = (total_size - len(exclude_idx) - mod) // folds
+    mod = len(mask) % folds
+    base = (len(mask) - mod) // folds
 
     for i in range(folds):
         ret.append([])
@@ -47,12 +42,12 @@ if __name__ == '__main__':
     if not os.path.isdir(root_path):
         os.makedirs(root_path)
 
-    test_mask = get_test_mask()
     node_features = read_pkl('tmp/features.pkl')
     node_labels = read_pkl('tmp/labels.pkl')
+    train_mask = read_pkl('tmp/train_mask.pkl')
     adj_matrix = sparse.load_npz('tmp/graph.npz')
 
-    masks = get_k_fold_mask(total_size=node_features.shape[0], folds=5, exclude_idx=test_mask)
+    masks = get_k_fold_mask(idx_list=train_mask, folds=5)
 
     perf = []
 
@@ -60,9 +55,8 @@ if __name__ == '__main__':
         model_path = root_path + '/' + str(i)
         os.makedirs(model_path)
 
-        train_mask = [masks[j] for j in range(5) if j != i]
-        train_mask = np.array(train_mask, dtype=int)
-        train_mask = np.reshape(train_mask, [-1])
+        train_mask = [np.array(masks[j]) for j in range(5) if j != i]
+        train_mask = np.concatenate(train_mask, axis=0)
 
         validation_mask = np.array(masks[i], dtype=int)
 
