@@ -8,9 +8,7 @@ from utils.io import read_pkl, save_pkl
 
 loc_db = read_pkl('tmp/location.pkl')
 candidate = read_pkl('tmp/candidate.pkl')
-
-with open('tmp/numclasses.txt', 'r') as f:
-    num_classes = int(f.read().rstrip('\n'))
+categorical = read_pkl('tmp/categorical.pkl')
 
 def normalize_matrix(adj):
     rowsum = np.array(adj.sum(axis=1))
@@ -29,7 +27,6 @@ def power_law(time_delta, k=0.5):
     return time_delta ** (-k)
 
 if __name__ == '__main__':
-
 
     # First pass: find all checkin place and user-miss pairs.
     counter = -1
@@ -144,11 +141,11 @@ if __name__ == '__main__':
     save_pkl('tmp/features.pkl', features)
 
     # Fourth pass: build node labels
-    labels = np.zeros((graph_size, num_classes))
+    labels = np.zeros((graph_size, len(categorical)))
 
     for node in nodes:
         if node not in u_m_pair:
-            labels[nodes[node]][loc_db[node]['class']] = 1
+            labels[nodes[node]][categorical.index(loc_db[node]['class'])] = 1
 
     print(np.sum(labels))
     save_pkl('tmp/labels.pkl', labels)

@@ -9,6 +9,7 @@ if __name__ == '__main__':
     tag2class = read_pkl('tmp/tag2class.pkl')
 
     candidate = {}
+    categorical = set()
 
     with open('raw/candidate_100_places.txt', 'r') as f:
         lines = f.readlines()
@@ -16,7 +17,10 @@ if __name__ == '__main__':
 
     for place in lines:
         candidate[place] = loc_db[place]
-        loc_db[place]['class'] = tag2class[candidate[place]['tag']]
+        tag = candidate[place]['tag']
+        label = tag if tag not in tag2class else tag2class[tag]
+        loc_db[place]['class'] = label
+        categorical.add(label)
 
     with open('raw/checkins_missing.txt', 'r') as f:
         for line in f:
@@ -29,7 +33,13 @@ if __name__ == '__main__':
                 if checkin[1] == '?' or loc_db[checkin[1]]['country'] != 'US':
                     continue
 
-                loc_db[checkin[1]]['class'] = tag2class[loc_db[checkin[1]]['tag']]
+                tag = loc_db[checkin[1]]['tag']
+                label = tag if tag not in tag2class else tag2class[tag]
+                loc_db[checkin[1]]['class'] = label
+                categorical.add(label)
 
+    categorical = list(categorical)
+    print(len(categorical))
+    save_pkl('tmp/categorical.pkl', categorical)
     save_pkl('tmp/candidate.pkl', candidate)
     save_pkl('tmp/location.pkl', loc_db)

@@ -1,0 +1,166 @@
+1:market
+  market
+  fishmarket
+  farmersmarket
+  fleamarket
+2:club
+  stripclub
+  nightclub
+  rockclub
+  jazzclub
+  comedyclub
+3:bar
+  sakebar
+  cocktailbar
+  juicebar
+  winebar
+  gaybar
+  hookahbar
+  whiskybar
+  bar
+  hotelbar
+4:stadium
+  stadium
+  baseballstadium
+  trackstadium
+  footballstadium
+  basketballstadium
+  soccerstadium
+  collegestadium
+5:field
+  field
+  soccerfield
+  collegefootballfield
+  baseballfield
+  collegesoccerfield
+6:court
+  tenniscourt
+  collegebasketballcourt
+  basketballcourt
+  golfcourse
+  volleyballcourt
+7:collegebuilding
+  collegecommunicationsbuilding
+  collegeengineeringbuilding
+  collegehistorybuilding
+  collegetechnologybuilding
+  collegeartsbuilding
+  collegeacademicbuilding
+  collegemathbuilding
+  collegesciencebuilding
+  collegeadministrativebuilding
+8:office
+  office
+  dentistoffice
+  dentistsoffice
+  doctorsoffice
+  realestateoffice
+  campaignoffice
+9:air
+  airportgate
+  airportterminal
+  airportfoodcourt
+  airporttram
+  airportlounge
+  plane
+  airport
+10:museum
+  museum
+  historymuseum
+  sciencemuseum
+  artmuseum
+11:restaurant
+  turkishrestaurant
+  tapasrestaurant
+  falafelrestaurant
+  latinamericanrestaurant
+  dumplingrestaurant
+  middleeasternrestaurant
+  fastfoodrestaurant
+  japaneserestaurant
+  easterneuropeanrestaurant
+  afghanrestaurant
+  africanrestaurant
+  filipinorestaurant
+  scandinavianrestaurant
+  moroccanrestaurant
+  asianrestaurant
+  australianrestaurant
+  newamericanrestaurant
+  cajuncreolerestaurant
+  vegetarianveganrestaurant
+  restaurant
+  argentinianrestaurant
+  indianrestaurant
+  portugueserestaurant
+  mexicanrestaurant
+  indonesianrestaurant
+  dimsumrestaurant
+  greekrestaurant
+  brazilianrestaurant
+  sushirestaurant
+  southamericanrestaurant
+  malaysianrestaurant
+  southernsoulfoodrestaurant
+  ethiopianrestaurant
+  moleculargastronomyrestaurant
+  seafoodrestaurant
+  chineserestaurant
+  italianrestaurant
+  glutenfreerestaurant
+  frenchrestaurant
+  cubanrestaurant
+  thairestaurant
+  spanishrestaurant
+  swissrestaurant
+  koreanrestaurant
+  areparestaurant
+  mediterraneanrestaurant
+  vietnameserestaurant
+  caribbeanrestaurant
+  germanrestaurant
+  americanrestaurant
+  mongolianrestaurant
+  peruvianrestaurant
+  paellarestaurant
+  ramennoodlehouse
+  steakhouse
+12:joint
+  burgerjoint
+  bbqjoint
+  friedchickenjoint
+  maccheesejoint
+  wingsjoint
+  hotdogjoint
+13:place
+  saladplace
+  soupplace
+  burritoplace
+  snackplace
+  pizzaplace
+  tacoplace
+  sandwichplace
+14:hotel
+  hostel
+  motel
+  hotel
+15:park
+  themeparkrideattraction
+  waterpark
+  skatepark
+  park
+16:volcano
+  volcano
+  volcanoes
+17:travel
+  travelagency
+  traveltransport
+  travellounge
+  touristinformationcenter
+  generaltravel
+18:theater
+  collegetheater
+  movietheater
+  indietheater
+  indiemovietheater
+  theater

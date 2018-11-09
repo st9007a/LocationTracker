@@ -21,6 +21,7 @@ node_features = read_pkl('tmp/features.pkl')
 node_labels = read_pkl('tmp/labels.pkl')
 user_checkins = read_pkl('tmp/user_checkins.pkl')
 user_miss_loc = read_pkl('tmp/user_miss_loc.pkl')
+categorical = read_pkl('tmp/categorical.pkl')
 
 def distance(lat1, lon1, lat2, lon2):
 
@@ -58,14 +59,14 @@ def get_average_distance(user, place):
     tmp = [distance(el[0], el[1], loc_db[place]['lat'], loc_db[place]['lon']) for el in user_miss_loc[user]]
     return sum(tmp) / len(tmp)
 
-def find_place(places, class_idx, node_idx):
+def find_place(places, tag, node_idx):
 
     user = nodes[node_idx][:-2]
     user_relative_loc = user_miss_loc[user]
     tmp = []
 
     for place in places:
-        if loc_db[place]['class'] == class_idx:
+        if loc_db[place]['class'] == tag:
             tmp.append(place)
 
     if len(tmp) == 0:
@@ -115,12 +116,12 @@ if __name__ == '__main__':
     for i in test_mask:
         user = nodes[i][:-2]
         pred = proba[i]
-        sort_idx = np.argsort(pred)
+        sort_idx = np.argsort(pred)[::-1]
 
         place_list = []
 
-        for j in range(len(sort_idx) - 1, -1, -1):
-            places = find_place(places=candidate, class_idx=sort_idx[j], node_idx=i)
+        for j in range(len(sort_idx)):
+            places = find_place(places=candidate, tag=categorical[sort_idx[j]], node_idx=i)
             place_list.extend(places)
 
         place_list = decrease_visited(place_list, user)
