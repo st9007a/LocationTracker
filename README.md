@@ -23,5 +23,5 @@ For cpu version:
   - It will spend about 25 minutes to train a model with 5-fold cross validation in a nvidia 1080ti GPU. 
 3. Generate result: `./eval.py my_model`
   - It generate a directory named `result`. And there are two files in the directory.
-    - result.txt: output file of this homework
-    - check.txt: the file that show the sorted classification probability of each user
+    - `result.txt`: output file of this homework
+    - `check.txt`: the file that show the sorted classification probability of each user
