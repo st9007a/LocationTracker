@@ -57,18 +57,9 @@ def find_place(places, tag, node_idx):
     if len(tmp) == 0:
         return tmp
 
-    # sort by group
-    group_order = np.argsort(node_features[node_idx][-6:]).tolist()[::-1]
-    ret = []
+    tmp.sort(key=lambda x: get_average_distance(user, x))
 
-    for g in group_order:
-        #sort by lat, lon
-        match = [el for el in tmp if loc_db[el]['group'] == g]
-        match.sort(key=lambda x: get_average_distance(user, x))
-
-        ret.extend(match)
-
-    return ret
+    return tmp
 
 def decrease_visited(place_list, user):
     length = len(place_list)

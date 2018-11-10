@@ -30,4 +30,4 @@ if __name__ == '__main__':
         for j in range(6):
             node_features[i][j + 24] = group_features[j]
 
-    save_pkl('tmp/features', node_features)
+    save_pkl('tmp/features.pkl', node_features)
