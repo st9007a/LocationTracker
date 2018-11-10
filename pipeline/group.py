@@ -17,7 +17,8 @@ if __name__ == '__main__':
 
             checkins = checkins.split(',')
             checkins = [(int(checkins[i]), checkins[i + 1])for i in range(0, len(checkins), 2)]
-            checkins = [el for el in checkins if el[1] != '?' and loc_db[el[1]]['country'] == 'US']
+            checkins = [el for el in checkins if el[1] != '?']
+            # checkins = [el for el in checkins if el[1] != '?' and loc_db[el[1]]['country'] == 'US']
 
             for checkin in checkins:
                 if checkin[1] not in loc_in_checkins:

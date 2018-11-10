@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
             checkins = checkins.split(',')
             checkins = [(int(checkins[i]), checkins[i + 1])for i in range(0, len(checkins), 2)]
-            checkins = [el for el in checkins if el[1] == '?' or loc[el[1]]['country'] == 'US']
+            # checkins = [el for el in checkins if el[1] == '?' or loc[el[1]]['country'] == 'US']
 
             for i, checkin in enumerate(checkins):
                 if checkin[1] != '?':

@@ -27,12 +27,6 @@ def get_train_class_weight():
 
     return counter
 
-    # counter_list = [(el, counter[el]) for el in counter]
-    # counter_list.sort(key=lambda x:x[1])
-    # counter_list.reverse()
-    #
-    # return counter_list
-
 def get_test_class_weight():
     counter = {}
 
@@ -46,18 +40,10 @@ def get_test_class_weight():
         counter[c] += 1
     return counter
 
-    # counter_list = [(el, counter[el]) for el in counter]
-    # counter_list.sort(key=lambda x:x[1])
-    # counter_list.reverse()
-    #
-    # return counter_list
-
 if __name__ == '__main__':
 
     tr_class_weight = get_train_class_weight()
     te_class_weight = get_test_class_weight()
-    # pprint(te_class_weight)
-    # exit()
 
     keep_tags = set()
     keep_classes = {}
@@ -85,10 +71,7 @@ if __name__ == '__main__':
         keep_classes[c] += 1
 
     categorical = list(keep_classes)
-    # keep_classes = [(el, keep_classes[el]) for el in keep_classes]
-    # keep_classes.sort(key=lambda x:x[1])
-    # keep_classes.reverse()
-    # print(len(keep_classes))
+    print('Num of classes:', len(categorical))
 
     train_mask = []
     labels = np.zeros((len(nodes), len(categorical)))

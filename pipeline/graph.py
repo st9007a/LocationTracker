@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
             checkins = checkins.split(',')
             checkins = [(int(checkins[i]), checkins[i + 1])for i in range(0, len(checkins), 2)]
-            checkins = [el for el in checkins if el[1] == '?' or loc_db[el[1]]['country'] == 'US']
+            # checkins = [el for el in checkins if el[1] == '?' or loc_db[el[1]]['country'] == 'US']
 
             for checkin in checkins:
                 place = None
@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
             checkins = checkins.split(',')
             checkins = [(int(checkins[i]), checkins[i + 1]) for i in range(0, len(checkins), 2)]
-            checkins = [el for el in checkins if el[1] == '?' or loc_db[el[1]]['country'] == 'US']
+            # checkins = [el for el in checkins if el[1] == '?' or loc_db[el[1]]['country'] == 'US']
 
             for i in range(len(checkins)):
                 x_id = checkins[i][1] if checkins[i][1] != '?' else user + '_?'
@@ -124,7 +124,7 @@ if __name__ == '__main__':
 
             checkins = checkins.split(',')
             checkins = [(int(checkins[i]), checkins[i + 1]) for i in range(0, len(checkins), 2)]
-            checkins = [el for el in checkins if el[1] == '?' or loc_db[el[1]]['country'] == 'US']
+            # checkins = [el for el in checkins if el[1] == '?' or loc_db[el[1]]['country'] == 'US']
 
             for i, checkin in enumerate(checkins):
                 place = user + '_?' if checkin[1] == '?' else checkin[1]
@@ -142,13 +142,3 @@ if __name__ == '__main__':
     location_features = normalize(location_features)
     features = np.concatenate([time_features, location_features], axis=1)
     save_pkl('tmp/features.pkl', features)
-
-    # Fourth pass: build node labels
-    # labels = np.zeros((graph_size, len(categorical)))
-    #
-    # for node in nodes:
-    #     if node not in u_m_pair:
-    #         labels[nodes[node]][categorical.index(loc_db[node]['class'])] = 1
-    #
-    # print(np.sum(labels))
-    # save_pkl('tmp/labels.pkl', labels)
