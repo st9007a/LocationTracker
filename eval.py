@@ -87,7 +87,7 @@ if __name__ == '__main__':
         os.makedirs('result')
 
     test_mask = get_test_mask()
-    f1 = open('result/ans.txt', 'w')
+    f1 = open('result/result.txt', 'w')
     f2 = open('result/check.txt', 'w')
 
     for i in test_mask:
